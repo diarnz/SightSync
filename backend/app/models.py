@@ -1,0 +1,32 @@
+# ============================================================
+# app/models.py – Pydantic response / request models
+# ============================================================
+
+from pydantic import BaseModel, Field
+from typing import List, Literal
+from datetime import datetime, timezone
+
+
+class AnalysisResponse(BaseModel):
+    """Structured response returned to the frontend after Gemini analysis."""
+
+    description: str = Field(
+        ...,
+        description="Accessibility-focused natural language description of the scene."
+    )
+    confidence: Literal["high", "medium", "low"] = Field(
+        default="high",
+        description="Rough confidence level based on image quality heuristics."
+    )
+    tags: List[str] = Field(
+        default_factory=list,
+        description="Key objects or scene labels extracted from the description."
+    )
+    timestamp: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        description="ISO 8601 UTC timestamp of when the response was generated."
+    )
+    processing_time_ms: int = Field(
+        default=0,
+        description="Wall-clock processing time in milliseconds."
+    )

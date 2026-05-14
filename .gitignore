@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+.eggs/
+.venv/
+venv/
+env/
+.env
+
+# Secrets (never commit these!)
+backend/.env
+frontend/.env.local
+*.env
+
+# Node
+node_modules/
+frontend/dist/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.DS_Store
+
+# Build artefacts
+*.log
+*.tmp
