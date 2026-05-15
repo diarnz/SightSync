@@ -2,13 +2,13 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import {
   Camera, Volume2, AlertCircle, RefreshCw, Radio, Square,
-  Zap, Clock, Tag, Mic, MicOff, CheckCircle2,
+  Zap, Clock, Tag, Mic, MicOff, CheckCircle2, SwitchCamera,
 } from 'lucide-react';
 import { useVoiceControl } from '../hooks/useVoiceControl';
+import ChatPanel from '../components/ChatPanel';
 
 // How often to CHECK for changes during live mode (ms).
-// No API call is made unless a change is detected.
-const LIVE_INTERVAL_MS = 4000;
+const LIVE_INTERVAL_MS = 1000;
 
 // Downsampled resolution for pixel-diff comparison
 const DIFF_W = 80;
@@ -36,6 +36,10 @@ const SceneAssistantPage: React.FC = () => {
   const [frameCount, setFrameCount] = useState(0);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>('idle');
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
+
+  // Latest captured frames (rolling buffer of 5) — kept as data-URLs so ChatPanel can send them
+  const [currentFramesDataUrls, setCurrentFramesDataUrls] = useState<string[]>([]);
 
   const webcamRef = useRef<Webcam>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -43,14 +47,16 @@ const SceneAssistantPage: React.FC = () => {
   const isPendingRef = useRef(false);
   const lastFrameDataRef = useRef<Uint8ClampedArray | null>(null);
 
+  // Ref to the ChatPanel's sendQuestion function (populated via callback)
+  const chatSendRef = useRef<((q: string) => void) | null>(null);
+
   // ── Change detection ─────────────────────────────────────────────────────
 
   const capturePixels = useCallback((): Uint8ClampedArray | null => {
     const video = webcamRef.current?.video;
     if (!video || video.readyState < 2) return null;
     const canvas = document.createElement('canvas');
-    canvas.width = DIFF_W;
-    canvas.height = DIFF_H;
+    canvas.width = DIFF_W; canvas.height = DIFF_H;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
     ctx.drawImage(video, 0, 0, DIFF_W, DIFF_H);
@@ -84,12 +90,20 @@ const SceneAssistantPage: React.FC = () => {
     if (isPendingRef.current) return;
     if (!webcamRef.current) return;
 
+    // Capture the frame right away so we always have a 1-second fresh buffer for chat
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (imageSrc) {
+      setCurrentFramesDataUrls(prev => {
+        const next = [...prev, imageSrc];
+        return next.length > 5 ? next.slice(next.length - 5) : next;
+      });
+    }
+
     if (!force && !hasSceneChanged()) {
       setChangeStatus('no-change');
       return;
     }
 
-    const imageSrc = webcamRef.current.getScreenshot();
     if (!imageSrc) return;
 
     isPendingRef.current = true;
@@ -120,7 +134,8 @@ const SceneAssistantPage: React.FC = () => {
         timestamp: new Date(),
       });
       setFrameCount(c => c + 1);
-      if (audioEnabled && data.audio_base64) playAudio(data.audio_base64);
+      // Removed automatic audio playback for scene captures as requested by the user.
+      // Audio can still be replayed manually via the replay button or voice command.
     } catch (err: any) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -193,9 +208,7 @@ const SceneAssistantPage: React.FC = () => {
           "what's around me", 'whats around me',
           "look around", "what is this",
         ],
-        action: () => {
-          if (!isLive && !isSingleCapture) captureOnce();
-        },
+        action: () => { if (!isLive && !isSingleCapture) captureOnce(); },
       },
       {
         label: 'Start Live',
@@ -212,7 +225,18 @@ const SceneAssistantPage: React.FC = () => {
         phrases: ['replay', 'repeat', 'say again', 'again'],
         action: replayAudio,
       },
+      {
+        label: 'Switch Camera',
+        phrases: ['switch camera', 'flip camera', 'change camera', 'front camera', 'back camera'],
+        action: () => setFacingMode(prev => prev === 'environment' ? 'user' : 'environment'),
+      },
     ],
+    // Forward unmatched final transcripts to the chat panel as questions
+    onFinal: (text, matchedCommand) => {
+      if (!matchedCommand && chatSendRef.current) {
+        chatSendRef.current(text);
+      }
+    },
   });
 
   const isListening = voiceStatus === 'listening';
@@ -259,8 +283,8 @@ const SceneAssistantPage: React.FC = () => {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             screenshotQuality={0.85}
-            videoConstraints={{ facingMode: 'environment' }}
-            className="absolute inset-0 w-full h-full object-cover"
+            videoConstraints={{ facingMode }}
+            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${facingMode === 'user' ? '-scale-x-100' : ''}`}
           />
 
           {/* Gradient overlay */}
@@ -299,7 +323,7 @@ const SceneAssistantPage: React.FC = () => {
             </div>
           )}
 
-          {/* Voice transcript overlay — shown while speaking */}
+          {/* Voice transcript overlay */}
           {isListening && transcript && (
             <div className="absolute bottom-14 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-10 fade-in">
               <div className="bg-black/70 backdrop-blur-sm border border-green-500/30 rounded-xl px-4 py-2.5 text-center">
@@ -320,7 +344,7 @@ const SceneAssistantPage: React.FC = () => {
 
           {/* Timestamp overlay */}
           {result && !isProcessing && (
-            <div className="absolute bottom-4 right-4 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full z-10">
+            <div className="absolute bottom-4 right-4 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full z-10 border border-white/10">
               <Clock className="w-3.5 h-3.5 text-gray-400" />
               <span className="text-gray-300 text-xs">{result.timestamp.toLocaleTimeString()}</span>
               <span className="text-gray-500 text-xs">·</span>
@@ -328,6 +352,17 @@ const SceneAssistantPage: React.FC = () => {
               <span className="text-gray-300 text-xs">{result.processing_time_ms}ms</span>
             </div>
           )}
+
+          {/* Flip Camera Button */}
+          <button
+            id="btn-flip-camera"
+            onClick={() => setFacingMode(prev => prev === 'environment' ? 'user' : 'environment')}
+            className="absolute bottom-4 left-4 p-2 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full text-white transition-all z-20 border border-white/10"
+            aria-label="Switch camera"
+            title="Switch between front and back camera"
+          >
+            <SwitchCamera className="w-5 h-5 text-gray-300" />
+          </button>
         </section>
 
         {/* Controls */}
@@ -335,38 +370,18 @@ const SceneAssistantPage: React.FC = () => {
 
           {/* Live toggle */}
           {isLive ? (
-            <button
-              id="btn-stop-live"
-              onClick={stopLive}
-              className="btn-danger py-4 text-lg"
-              aria-label="Stop live analysis"
-            >
-              <Square className="w-5 h-5 mr-2" />
-              Stop Live
+            <button id="btn-stop-live" onClick={stopLive} className="btn-danger py-4 text-lg" aria-label="Stop live analysis">
+              <Square className="w-5 h-5 mr-2" />Stop Live
             </button>
           ) : (
-            <button
-              id="btn-start-live"
-              onClick={startLive}
-              disabled={isSingleCapture}
-              className="btn-primary py-4 text-lg"
-              aria-label="Start live analysis"
-            >
-              <Radio className="w-5 h-5 mr-2" />
-              Start Live
+            <button id="btn-start-live" onClick={startLive} disabled={isSingleCapture} className="btn-primary py-4 text-lg" aria-label="Start live analysis">
+              <Radio className="w-5 h-5 mr-2" />Start Live
             </button>
           )}
 
           {/* Single capture */}
-          <button
-            id="btn-capture-once"
-            onClick={captureOnce}
-            disabled={isLive || isSingleCapture}
-            className="btn-secondary py-4 text-base"
-            aria-label="Capture and describe scene once"
-          >
-            <Camera className="w-5 h-5 mr-2" />
-            Capture
+          <button id="btn-capture-once" onClick={captureOnce} disabled={isLive || isSingleCapture} className="btn-secondary py-4 text-base" aria-label="Capture and describe scene once">
+            <Camera className="w-5 h-5 mr-2" />Capture
           </button>
 
           {/* Audio toggle */}
@@ -376,62 +391,49 @@ const SceneAssistantPage: React.FC = () => {
             className={`btn-secondary py-4 text-base ${audioEnabled ? 'border-blue-500/50 text-blue-300' : 'opacity-50'}`}
             aria-label={audioEnabled ? 'Mute audio' : 'Unmute audio'}
           >
-            <Volume2 className="w-5 h-5 mr-2" />
-            {audioEnabled ? 'Audio On' : 'Audio Off'}
+            <Volume2 className="w-5 h-5 mr-2" />{audioEnabled ? 'Audio On' : 'Audio Off'}
           </button>
 
           {/* Mic / Voice toggle */}
           {voiceStatus === 'unsupported' ? (
-            <button
-              id="btn-mic-unsupported"
-              disabled
-              className="btn-secondary py-4 text-base opacity-40 cursor-not-allowed"
-              title="Speech recognition is not supported in this browser"
-            >
-              <MicOff className="w-5 h-5 mr-2" />
-              No Mic
+            <button id="btn-mic-unsupported" disabled className="btn-secondary py-4 text-base opacity-40 cursor-not-allowed" title="Speech recognition not supported">
+              <MicOff className="w-5 h-5 mr-2" />No Mic
             </button>
           ) : (
             <button
               id="btn-toggle-mic"
               onClick={toggleVoice}
               className={`btn-secondary py-4 text-base transition-all duration-300 ${
-                isListening
-                  ? 'border-green-500/60 text-green-300 shadow-[0_0_20px_rgba(74,222,128,0.15)]'
-                  : 'opacity-70 hover:opacity-100'
+                isListening ? 'border-green-500/60 text-green-300 shadow-[0_0_20px_rgba(74,222,128,0.15)]' : 'opacity-70 hover:opacity-100'
               }`}
               aria-label={isListening ? 'Turn off voice control' : 'Turn on voice control'}
             >
-              {isListening ? (
-                <Mic className="w-5 h-5 mr-2 animate-pulse" />
-              ) : (
-                <MicOff className="w-5 h-5 mr-2" />
-              )}
+              {isListening ? <Mic className="w-5 h-5 mr-2 animate-pulse" /> : <MicOff className="w-5 h-5 mr-2" />}
               {isListening ? 'Voice On' : 'Voice Off'}
             </button>
           )}
         </section>
 
-        {/* Voice commands cheatsheet — shown when mic is on */}
+        {/* Voice commands cheatsheet */}
         {isListening && (
           <div className="card-glass p-4 border-green-500/20 bg-green-500/5 fade-in">
             <p className="text-xs text-green-400 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Mic className="w-3.5 h-3.5" /> Voice commands
+              <Mic className="w-3.5 h-3.5" /> Voice commands &amp; questions
             </p>
             <div className="flex flex-wrap gap-2">
               {[
                 '"analyze"', '"describe"', '"scan"', '"tell me"',
-                '"what do you see"', '"what\'s in front of me"',
-                '"start live"', '"stop live"', '"replay"',
+                '"what do you see"', '"start live"', '"stop live"', '"replay"',
+                '"switch camera"', '"is there a person?"', '"what colour is…"', '"how many…"',
               ].map(phrase => (
-                <span
-                  key={phrase}
-                  className="px-2.5 py-1 rounded-full text-xs bg-green-500/10 text-green-300 border border-green-500/20"
-                >
+                <span key={phrase} className="px-2.5 py-1 rounded-full text-xs bg-green-500/10 text-green-300 border border-green-500/20">
                   {phrase}
                 </span>
               ))}
             </div>
+            <p className="text-xs text-green-300/60 mt-2">
+              💡 Any question not matching a command is sent to the chat below.
+            </p>
           </div>
         )}
 
@@ -463,10 +465,7 @@ const SceneAssistantPage: React.FC = () => {
 
         {/* Result card */}
         {result && (
-          <div
-            className="card-glass p-6 sm:p-8 fade-in relative group overflow-hidden"
-            key={result.timestamp.toISOString()}
-          >
+          <div className="card-glass p-6 sm:p-8 fade-in relative group overflow-hidden" key={result.timestamp.toISOString()}>
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-cyan-400" />
 
             <div className="flex justify-between items-center mb-4">
@@ -497,10 +496,7 @@ const SceneAssistantPage: React.FC = () => {
               <div className="flex flex-wrap gap-2 items-center">
                 <Tag className="w-4 h-4 text-gray-500" />
                 {result.tags.map(tag => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-300 border border-blue-500/20"
-                  >
+                  <span key={tag} className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-300 border border-blue-500/20">
                     {tag}
                   </span>
                 ))}
@@ -508,6 +504,14 @@ const SceneAssistantPage: React.FC = () => {
             )}
           </div>
         )}
+
+        {/* ── Chat Panel ── */}
+        <ChatPanel
+          currentFramesDataUrls={currentFramesDataUrls}
+          audioEnabled={audioEnabled}
+          voiceTranscript={isListening ? transcript : ''}
+          onVoiceQuestion={(fn) => { chatSendRef.current = fn; }}
+        />
 
       </main>
     </div>

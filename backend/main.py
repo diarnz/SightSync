@@ -8,7 +8,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import image_analysis
+from app.routers import image_analysis, chat
 from app.config import settings
 
 # ------------------------------------------------------------------
@@ -38,6 +38,7 @@ app.add_middleware(
 # Routers
 # ------------------------------------------------------------------
 app.include_router(image_analysis.router, prefix="", tags=["Image Analysis"])
+app.include_router(chat.router, prefix="", tags=["Chat"])
 
 
 # ------------------------------------------------------------------

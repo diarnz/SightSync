@@ -34,3 +34,24 @@ class AnalysisResponse(BaseModel):
         default=None,
         description="Base64 encoded audio string of the description spoken out loud."
     )
+
+
+class ChatResponse(BaseModel):
+    """Structured response for a conversational Q&A turn about the current scene."""
+
+    answer: str = Field(
+        ...,
+        description="Natural language answer to the user's question about the scene."
+    )
+    processing_time_ms: int = Field(
+        default=0,
+        description="Wall-clock processing time in milliseconds."
+    )
+    audio_base64: Optional[str] = Field(
+        default=None,
+        description="Base64 encoded audio of the spoken answer (WAV)."
+    )
+    timestamp: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        description="ISO 8601 UTC timestamp."
+    )

@@ -20,6 +20,8 @@ interface UseVoiceControlOptions {
   lang?: string;
   /** Called with the raw transcript whenever speech is recognised */
   onTranscript?: (text: string) => void;
+  /** Called when a final transcript is produced, indicating if it matched a command */
+  onFinal?: (text: string, matchedCommand: string | null) => void;
 }
 
 export type VoiceStatus = 'unsupported' | 'idle' | 'listening' | 'error';
@@ -34,6 +36,7 @@ export function useVoiceControl({
   commands,
   lang = 'en-US',
   onTranscript,
+  onFinal,
 }: UseVoiceControlOptions) {
   const [status, setStatus] = useState<VoiceStatus>(
     SpeechRecognition ? 'idle' : 'unsupported'
@@ -54,10 +57,10 @@ export function useVoiceControl({
         cmd.action();
         // Clear the matched label after 2 s
         setTimeout(() => setMatchedCommand(null), 2000);
-        return true;
+        return cmd.label;
       }
     }
-    return false;
+    return null;
   }, []);
 
   const start = useCallback(() => {
@@ -94,7 +97,8 @@ export function useVoiceControl({
       onTranscript?.(text);
 
       if (last.isFinal) {
-        matchAndFire(text);
+        const matched = matchAndFire(text);
+        if (onFinal) onFinal(text, matched);
         setTranscript('');
       }
     };
