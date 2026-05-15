@@ -8,6 +8,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException
 
 from app.models import AnalysisResponse
 from app.services.gemini_service import analyse_image_bytes
+from app.services.elevenlabs_service import generate_speech_base64
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -72,9 +73,15 @@ async def analyze_image(
     else:
         confidence = "high"
 
+    # ------ Text-to-Speech (ElevenLabs) ------
+    audio_base64 = None
+    if description:
+        audio_base64 = await generate_speech_base64(description)
+
     return AnalysisResponse(
         description=description,
         confidence=confidence,
         tags=tags,
         processing_time_ms=processing_ms,
+        audio_base64=audio_base64,
     )

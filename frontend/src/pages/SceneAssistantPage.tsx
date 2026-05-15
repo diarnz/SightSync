@@ -5,6 +5,7 @@ import { Camera, Volume2, AlertCircle, RefreshCw } from 'lucide-react';
 const SceneAssistantPage: React.FC = () => {
   const [isDescribing, setIsDescribing] = useState(false);
   const [description, setDescription] = useState<string | null>(null);
+  const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const webcamRef = useRef<Webcam>(null);
 
@@ -14,6 +15,7 @@ const SceneAssistantPage: React.FC = () => {
     setIsDescribing(true);
     setError(null);
     setDescription(null);
+    setAudioBase64(null);
 
     try {
       const imageSrc = webcamRef.current.getScreenshot();
@@ -39,12 +41,26 @@ const SceneAssistantPage: React.FC = () => {
 
       const data = await response.json();
       setDescription(data.description);
+      
+      if (data.audio_base64) {
+        setAudioBase64(data.audio_base64);
+        playAudio(data.audio_base64);
+      }
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
       setIsDescribing(false);
     }
   }, [webcamRef]);
+
+  const playAudio = (base64Data: string) => {
+    try {
+      const audio = new Audio(`data:audio/mp3;base64,${base64Data}`);
+      audio.play();
+    } catch (e) {
+      console.error("Failed to play audio:", e);
+    }
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col p-4 sm:p-8 max-w-4xl mx-auto z-10">
@@ -115,7 +131,9 @@ const SceneAssistantPage: React.FC = () => {
                 Scene Description
               </h2>
               <button 
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                onClick={() => audioBase64 && playAudio(audioBase64)}
+                disabled={!audioBase64}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Read description aloud again"
                 title="Read aloud"
               >

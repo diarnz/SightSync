@@ -16,6 +16,9 @@ class Settings:
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     GEMINI_MODEL:   str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
+    # ElevenLabs API
+    ELEVENLABS_API_KEY: str = os.getenv("ELEVENLABS_API_KEY", "")
+
     # CORS – comma or space separated list of allowed origins
     @property
     def CORS_ORIGINS(self) -> list[str]:

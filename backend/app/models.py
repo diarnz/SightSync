@@ -3,7 +3,7 @@
 # ============================================================
 
 from pydantic import BaseModel, Field
-from typing import List, Literal
+from typing import List, Literal, Optional
 from datetime import datetime, timezone
 
 
@@ -29,4 +29,8 @@ class AnalysisResponse(BaseModel):
     processing_time_ms: int = Field(
         default=0,
         description="Wall-clock processing time in milliseconds."
+    )
+    audio_base64: Optional[str] = Field(
+        default=None,
+        description="Base64 encoded audio string of the description spoken out loud."
     )
