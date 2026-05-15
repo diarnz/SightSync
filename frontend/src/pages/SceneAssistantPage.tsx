@@ -55,7 +55,7 @@ const SceneAssistantPage: React.FC = () => {
 
   const playAudio = (base64Data: string) => {
     try {
-      const audio = new Audio(`data:audio/mp3;base64,${base64Data}`);
+      const audio = new Audio(`data:audio/wav;base64,${base64Data}`);
       audio.play();
     } catch (e) {
       console.error("Failed to play audio:", e);
