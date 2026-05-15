@@ -14,7 +14,7 @@ load_dotenv()
 class Settings:
     # Google AI
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL:   str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    GEMINI_MODEL:   str = os.getenv("GEMINI_MODEL", "gemini-3.0-flash")
 
     # Camb AI API
     CAMBAI_API_KEY: str = os.getenv("CAMBAI_API_KEY", "")
