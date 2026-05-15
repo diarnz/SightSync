@@ -45,7 +45,7 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 SYSTEM_PROMPT = (
     "You are an expert accessibility assistant for visually impaired users. "
     "Analyze the image and provide a JSON response with two keys:\n"
-    "1. 'description': A clear, natural, spoken-word-friendly description (3-5 sentences). "
+    "1. 'description': A clear, natural, spoken-word-friendly description (strictly under 500 characters). "
     "Start with the most important element. Mention colours, spatial layout, lighting, "
     "and any visible text. Note potential hazards. Do not use markdown or bullet points. "
     "Do not start with 'I see'.\n"
@@ -96,6 +96,9 @@ async def analyse_image_bytes(
             data = json.loads(response.text)
 
         description = data.get("description", "No description generated.")
+        if len(description) > 500:
+            # Ensure it strictly doesn't exceed 500 characters
+            description = description[:497] + "..."
         tags = data.get("tags", [])
         processing_ms = int((time.monotonic() - start) * 1000)
 
