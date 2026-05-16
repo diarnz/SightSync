@@ -26,11 +26,49 @@ interface UseVoiceControlOptions {
 
 export type VoiceStatus = 'unsupported' | 'idle' | 'listening' | 'error';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SpeechRecognition: any =
-  typeof window !== 'undefined'
-    ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-    : null;
+interface SpeechRecognitionErrorEventLike {
+  error: string;
+}
+
+interface SpeechRecognitionEventLike {
+  results: {
+    length: number;
+    [index: number]: {
+      isFinal: boolean;
+      [index: number]: {
+        transcript: string;
+      };
+    };
+  };
+}
+
+interface SpeechRecognitionLike {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  onstart: (() => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+  onend: (() => void) | null;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
+function getSpeechRecognition(): SpeechRecognitionConstructor | null {
+  if (typeof window === 'undefined') return null;
+
+  const speechWindow = window as Window & {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  };
+
+  return speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition || null;
+}
+
+const SpeechRecognition = getSpeechRecognition();
 
 export function useVoiceControl({
   commands,
@@ -44,10 +82,20 @@ export function useVoiceControl({
   const [transcript, setTranscript] = useState('');
   const [matchedCommand, setMatchedCommand] = useState<string | null>(null);
 
-  const recogRef = useRef<any>(null);
+  const recogRef = useRef<SpeechRecognitionLike | null>(null);
   const enabledRef = useRef(false);
   const commandsRef = useRef(commands);
-  commandsRef.current = commands; // keep ref fresh without restarting recognition
+  const onTranscriptRef = useRef(onTranscript);
+  const onFinalRef = useRef(onFinal);
+
+  useEffect(() => {
+    commandsRef.current = commands;
+  }, [commands]);
+
+  useEffect(() => {
+    onTranscriptRef.current = onTranscript;
+    onFinalRef.current = onFinal;
+  }, [onTranscript, onFinal]);
 
   const matchAndFire = useCallback((text: string) => {
     const lower = text.toLowerCase().trim();
@@ -75,7 +123,7 @@ export function useVoiceControl({
     recogRef.current = recog;
 
     recog.onstart = () => setStatus('listening');
-    recog.onerror = (e: any) => {
+    recog.onerror = (e) => {
       // 'no-speech' is normal — ignore it and let onend restart
       if (e.error !== 'no-speech') {
         setStatus('error');
@@ -89,16 +137,16 @@ export function useVoiceControl({
         setStatus('idle');
       }
     };
-    recog.onresult = (event: any) => {
+    recog.onresult = (event) => {
       const last = event.results[event.results.length - 1];
       const text: string = last[0].transcript;
 
       setTranscript(text);
-      onTranscript?.(text);
+      onTranscriptRef.current?.(text);
 
       if (last.isFinal) {
         const matched = matchAndFire(text);
-        if (onFinal) onFinal(text, matched);
+        onFinalRef.current?.(text, matched);
         setTranscript('');
       }
     };
@@ -108,7 +156,7 @@ export function useVoiceControl({
     } catch {
       setStatus('error');
     }
-  }, [lang, matchAndFire, onTranscript]);
+  }, [lang, matchAndFire]);
 
   const stop = useCallback(() => {
     enabledRef.current = false;

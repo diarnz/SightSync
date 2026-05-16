@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 
 class AnalysisResponse(BaseModel):
-    """Structured response returned to the frontend after Gemini analysis."""
+    """Structured response returned to the frontend after scene analysis."""
 
     description: str = Field(
         ...,
@@ -17,6 +17,14 @@ class AnalysisResponse(BaseModel):
     confidence: Literal["high", "medium", "low"] = Field(
         default="high",
         description="Rough confidence level based on image quality heuristics."
+    )
+    urgency: Literal["normal", "critical"] = Field(
+        default="normal",
+        description="Whether the scene contains information that should be spoken immediately."
+    )
+    should_speak: bool = Field(
+        default=False,
+        description="True when the client should automatically speak this result."
     )
     tags: List[str] = Field(
         default_factory=list,

@@ -1,0 +1,18 @@
+story: 4
+specificity: 4
+rhythm: 4
+whitespace: 4
+chart clarity: n/a
+typography: 4
+restraint: 4
+precision: 4
+coherence: 4
+reference delta: n/a
+
+profile gates:
+- engineering-platform: pass
+- product-platform secondary gates: pass
+
+notes:
+- The deck stays specific to SightSync's accessibility workflow and architecture.
+- It avoids invented usage metrics and presents roadmap items exactly as documented.

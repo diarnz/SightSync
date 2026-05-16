@@ -6,9 +6,20 @@
 export interface AnalysisResponse {
   description: string;          // Main accessibility-focused scene description
   confidence: 'high' | 'medium' | 'low';
+  urgency: 'normal' | 'critical';
+  should_speak: boolean;
   tags: string[];               // Key objects / scene labels
   timestamp: string;            // ISO 8601 from backend
   processing_time_ms: number;
+  audio_base64?: string | null;
+}
+
+/** Response shape returned by POST /chat */
+export interface ChatResponse {
+  answer: string;
+  processing_time_ms: number;
+  timestamp: string;
+  audio_base64?: string | null;
 }
 
 /** Possible states of the image analysis workflow */
@@ -20,14 +31,6 @@ export interface HistoryEntry {
   imageDataUrl: string;          // Base64 thumbnail stored in state (not persisted)
   response: AnalysisResponse;
   createdAt: Date;
-}
-
-/** Firebase user shape (slim version of firebase/auth User) */
-export interface AppUser {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
 }
 
 /** Toast notification levels */

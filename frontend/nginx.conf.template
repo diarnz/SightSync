@@ -1,0 +1,22 @@
+server {
+  listen ${PORT};
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location = /env-config.js {
+    default_type application/javascript;
+    add_header Cache-Control "no-store";
+    return 200 "window.__SIGHTSYNC_CONFIG__ = { apiBaseUrl: '${VITE_API_BASE_URL}' };";
+  }
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|webp|woff2?)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+    try_files $uri =404;
+  }
+}

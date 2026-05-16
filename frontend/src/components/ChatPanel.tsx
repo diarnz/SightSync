@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, MessageCircle, Loader2, Volume2, Bot, User } from 'lucide-react';
+import { chatAboutScene } from '../services/api';
+import { useTTS } from '../hooks/useTTS';
 
 export interface ChatMessage {
   id: string;
@@ -32,21 +34,16 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { speak } = useTTS();
+
+  const getErrorMessage = (error: unknown) => {
+    return error instanceof Error ? error.message : 'An unknown error occurred';
+  };
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  const playAudio = useCallback((base64: string) => {
-    try {
-      if (audioRef.current) audioRef.current.pause();
-      const audio = new Audio(`data:audio/wav;base64,${base64}`);
-      audioRef.current = audio;
-      audio.play().catch(console.error);
-    } catch (e) { console.error(e); }
-  }, []);
 
   const sendQuestion = useCallback(async (question: string) => {
     const q = question.trim();
@@ -73,24 +70,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     setIsLoading(true);
 
     try {
-      const form = new FormData();
-      form.append('question', q);
-      
-      // Convert all data-urls → blobs
-      for (let i = 0; i < currentFramesDataUrls.length; i++) {
-        const res = await fetch(currentFramesDataUrls[i]);
-        const blob = await res.blob();
-        form.append('files', blob, `scene_${i}.jpg`);
-      }
-
-      const response = await fetch('/api/chat', { method: 'POST', body: form });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.detail || `Server error ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await chatAboutScene(q, currentFramesDataUrls);
       const assistantMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
@@ -100,26 +80,27 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         timestampMs: Date.now(),
       };
       setMessages(prev => [...prev, assistantMsg]);
-      if (audioEnabled && data.audio_base64) playAudio(data.audio_base64);
-    } catch (err: any) {
+      if (audioEnabled) {
+        speak({ text: data.answer, audioBase64: data.audio_base64 });
+      }
+    } catch (err: unknown) {
       setMessages(prev => [...prev, {
         id: crypto.randomUUID(),
         role: 'assistant',
-        text: `Sorry, something went wrong: ${err.message}`,
+        text: `Sorry, something went wrong: ${getErrorMessage(err)}`,
         timestampMs: Date.now(),
       }]);
     } finally {
       setIsLoading(false);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [currentFramesDataUrls, isLoading, audioEnabled, playAudio]);
+  }, [currentFramesDataUrls, isLoading, audioEnabled, speak]);
 
   // Expose sendQuestion to parent via callback on every render (stable ref)
   const onVoiceQuestionRef = useRef(onVoiceQuestion);
   onVoiceQuestionRef.current = onVoiceQuestion;
   useEffect(() => {
     onVoiceQuestionRef.current?.(sendQuestion);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sendQuestion]);
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -148,7 +129,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" role="log" aria-live="polite" aria-relevant="additions">
         {isEmpty && (
           <div className="flex-1 flex flex-col items-center justify-center text-center py-6 gap-3 opacity-50">
             <Bot className="w-10 h-10" style={{ color: 'var(--color-accent-blue)' }} />
@@ -181,12 +162,13 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
               }}
             >
               <p>{msg.text}</p>
-              {msg.role === 'assistant' && msg.audioBase64 && (
+              {msg.role === 'assistant' && (
                 <button
-                  onClick={() => playAudio(msg.audioBase64!)}
+                  onClick={() => speak({ text: msg.text, audioBase64: msg.audioBase64 })}
                   className="mt-1.5 flex items-center gap-1 text-xs opacity-60 hover:opacity-100 transition-opacity"
                   style={{ color: 'var(--color-accent-cyan)' }}
                   title="Replay answer"
+                  aria-label="Replay chat answer"
                 >
                   <Volume2 className="w-3 h-3" /> replay
                 </button>

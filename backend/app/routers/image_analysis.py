@@ -14,7 +14,7 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Allowed MIME types (Gemini supports these natively)
+# Allowed MIME types for the multimodal provider
 ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 MAX_BYTES = settings.MAX_IMAGE_SIZE_MB * 1024 * 1024
 
@@ -22,10 +22,10 @@ MAX_BYTES = settings.MAX_IMAGE_SIZE_MB * 1024 * 1024
 @router.post(
     "/analyze-image",
     response_model=AnalysisResponse,
-    summary="Analyse an image with Gemini Vision",
+    summary="Analyse an image with the multimodal provider",
     description=(
         "Accepts a multipart/form-data image upload. "
-        "Sends the image to Gemini Multimodal API and returns an "
+        "Sends the image to the multimodal API and returns an "
         "accessibility-focused scene description."
     ),
 )
@@ -56,9 +56,9 @@ async def analyze_image(
         file.filename, file.content_type, len(image_bytes),
     )
 
-    # ------ Gemini analysis ------
+    # ------ Scene analysis ------
     try:
-        description, tags, processing_ms = await analyse_image_bytes(
+        description, tags, urgency, should_speak, processing_ms = await analyse_image_bytes(
             image_bytes=image_bytes,
             mime_type=file.content_type or "image/jpeg",
         )
@@ -81,6 +81,8 @@ async def analyze_image(
     return AnalysisResponse(
         description=description,
         confidence=confidence,
+        urgency=urgency,
+        should_speak=should_speak,
         tags=tags,
         processing_time_ms=processing_ms,
         audio_base64=audio_base64,

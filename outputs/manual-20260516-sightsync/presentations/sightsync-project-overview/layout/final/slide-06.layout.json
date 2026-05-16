@@ -1,0 +1,1400 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/87t0cw",
+    "id": "87t0cw",
+    "slide": 6,
+    "layoutId": "541e1f6c-65c1-4530-b749-3ef4760c2463",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "1ef1ed07-8d60-4a79-bdc9-07303578ef02",
+    "masterLayoutName": "Master",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Aptos",
+      "Aptos Display"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "541e1f6c-65c1-4530-b749-3ef4760c2463",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "1ef1ed07-8d60-4a79-bdc9-07303578ef02",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "1ef1ed07-8d60-4a79-bdc9-07303578ef02",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3ylc7u54",
+      "id": "1",
+      "bbox": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "geometry": "rect",
+      "fillColor": "#07111F",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sji5snel",
+      "id": "2",
+      "bbox": [
+        0,
+        0,
+        1280,
+        188
+      ],
+      "geometry": "rect",
+      "fillColor": "#0A1730",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/h4byhgn2",
+      "id": "3",
+      "bbox": [
+        960,
+        0,
+        320,
+        720
+      ],
+      "geometry": "rect",
+      "fillColor": "#081523",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/a5gbq1or",
+      "id": "4",
+      "bbox": [
+        64,
+        48,
+        10,
+        10
+      ],
+      "geometry": "rect",
+      "fillColor": "#30D5C8",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3m94fu18",
+      "id": "5",
+      "bbox": [
+        84,
+        43,
+        260,
+        18
+      ],
+      "geometry": "rect",
+      "text": "WHERE IT GOES NEXT",
+      "textPreview": "WHERE IT GOES NEXT",
+      "resolvedFontSize": 10,
+      "resolvedTextStyle": {
+        "fontSize": 10,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "WHERE IT GOES NEXT"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "WHERE IT GOES NEXT",
+          "runs": [
+            {
+              "index": 1,
+              "text": "WHERE IT GOES NEXT",
+              "fontSize": 10,
+              "typeface": "Aptos",
+              "color": "#9FB3C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/s72x4nap",
+      "id": "6",
+      "bbox": [
+        64,
+        78,
+        760,
+        96
+      ],
+      "geometry": "rect",
+      "text": "SightSync already has a credible MVP story, and the next steps are easy to explain.",
+      "textPreview": "SightSync already has a credible MVP story, and the next steps are easy to explain.",
+      "resolvedFontSize": 33,
+      "resolvedTextStyle": {
+        "fontSize": 33,
+        "typeface": "Aptos Display",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SightSync already has a credible MVP story, and"
+          },
+          {
+            "index": 2,
+            "text": "the next steps are easy to explain."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SightSync already has a credible MVP story, and the next steps are easy to explain.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "SightSync already has a credible MVP story, and the next steps are easy to explain.",
+              "fontSize": 33,
+              "typeface": "Aptos Display",
+              "color": "#FFFFFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/lszqtcj6",
+      "id": "7",
+      "bbox": [
+        64,
+        184,
+        566,
+        84
+      ],
+      "geometry": "rect",
+      "text": "The project is already clear about its lane: scene description and short scene Q&A. That focus is a strength. It means the roadmap can stay grounded in accessibility instead of drifting into vague 'AI assistant' territory.",
+      "textPreview": "The project is already clear about its lane: scene description and short scene Q&A. That focus is a strength. It means the roadmap can st...",
+      "resolvedFontSize": 15.51,
+      "resolvedTextStyle": {
+        "fontSize": 15.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The project is already clear about its lane: scene description and short scene"
+          },
+          {
+            "index": 2,
+            "text": "Q&A. That focus is a strength. It means the roadmap can stay grounded in"
+          },
+          {
+            "index": 3,
+            "text": "accessibility instead of drifting into vague 'AI assistant' territory."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The project is already clear about its lane: scene description and short scene Q&A. That focus is a strength. It means the roadmap can stay grounded in accessibility instead of drifting into vague 'AI assistant' territory.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "The project is already clear about its lane: scene description and short scene Q&A. That focus is a strength. It means the roadmap can stay grounded in accessibility instead of drifting into vague 'AI assistant' territory.",
+              "fontSize": 15.51,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/a1gvy90j",
+      "id": "8",
+      "bbox": [
+        64,
+        300,
+        276,
+        294
+      ],
+      "geometry": "rect",
+      "fillColor": "#0C1B2D",
+      "lineColor": "#294562",
+      "lineWidth": 1
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zidonyd0",
+      "id": "9",
+      "bbox": [
+        90,
+        326,
+        160,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Best for today",
+      "textPreview": "Best for today",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Best for today"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Best for today",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Best for today",
+              "fontSize": 16,
+              "typeface": "Aptos",
+              "color": "#FFFFFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/re1w7mp0",
+      "id": "10",
+      "bbox": [
+        90,
+        370,
+        180,
+        16
+      ],
+      "geometry": "rect",
+      "text": "• immediate scene summaries",
+      "textPreview": "• immediate scene summaries",
+      "resolvedFontSize": 11.51,
+      "resolvedTextStyle": {
+        "fontSize": 11.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "• immediate scene summaries"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "• immediate scene summaries",
+          "runs": [
+            {
+              "index": 1,
+              "text": "• immediate scene summaries",
+              "fontSize": 11.51,
+              "typeface": "Aptos",
+              "color": "#4DA3FF"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2t83itgf",
+      "id": "11",
+      "bbox": [
+        90,
+        400,
+        180,
+        16
+      ],
+      "geometry": "rect",
+      "text": "• critical hazard cues",
+      "textPreview": "• critical hazard cues",
+      "resolvedFontSize": 11.51,
+      "resolvedTextStyle": {
+        "fontSize": 11.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "• critical hazard cues"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "• critical hazard cues",
+          "runs": [
+            {
+              "index": 1,
+              "text": "• critical hazard cues",
+              "fontSize": 11.51,
+              "typeface": "Aptos",
+              "color": "#4DA3FF"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9knih4by",
+      "id": "12",
+      "bbox": [
+        90,
+        430,
+        200,
+        16
+      ],
+      "geometry": "rect",
+      "text": "• object and layout questions",
+      "textPreview": "• object and layout questions",
+      "resolvedFontSize": 11.51,
+      "resolvedTextStyle": {
+        "fontSize": 11.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "• object and layout questions"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "• object and layout questions",
+          "runs": [
+            {
+              "index": 1,
+              "text": "• object and layout questions",
+              "fontSize": 11.51,
+              "typeface": "Aptos",
+              "color": "#4DA3FF"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kzupwb2h",
+      "id": "13",
+      "bbox": [
+        90,
+        460,
+        170,
+        16
+      ],
+      "geometry": "rect",
+      "text": "• quick hosted demos",
+      "textPreview": "• quick hosted demos",
+      "resolvedFontSize": 11.51,
+      "resolvedTextStyle": {
+        "fontSize": 11.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "• quick hosted demos"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "• quick hosted demos",
+          "runs": [
+            {
+              "index": 1,
+              "text": "• quick hosted demos",
+              "fontSize": 11.51,
+              "typeface": "Aptos",
+              "color": "#4DA3FF"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rqd4vmtw",
+      "id": "14",
+      "bbox": [
+        90,
+        500,
+        214,
+        64
+      ],
+      "geometry": "rect",
+      "text": "In other words: it is strong as an assistive interpretation layer that helps the user understand a moment, then decide what to do next.",
+      "textPreview": "In other words: it is strong as an assistive interpretation layer that helps the user understand a moment, then decide what to do next.",
+      "resolvedFontSize": 11,
+      "resolvedTextStyle": {
+        "fontSize": 11,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 4,
+        "lines": [
+          {
+            "index": 1,
+            "text": "In other words: it is strong as an assistive"
+          },
+          {
+            "index": 2,
+            "text": "interpretation layer that helps the user"
+          },
+          {
+            "index": 3,
+            "text": "understand a moment, then decide what to"
+          },
+          {
+            "index": 4,
+            "text": "do next."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "In other words: it is strong as an assistive interpretation layer that helps the user understand a moment, then decide what to do next.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "In other words: it is strong as an assistive interpretation layer that helps the user understand a moment, then decide what to do next.",
+              "fontSize": 11,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/25kb6xkf",
+      "id": "15",
+      "bbox": [
+        362,
+        300,
+        376,
+        310
+      ],
+      "geometry": "rect",
+      "fillColor": "#0C1B2D",
+      "lineColor": "#294562",
+      "lineWidth": 1
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9w3m94fu",
+      "id": "16",
+      "bbox": [
+        388,
+        326,
+        190,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Next MVP milestones",
+      "textPreview": "Next MVP milestones",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Next MVP milestones"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Next MVP milestones",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Next MVP milestones",
+              "fontSize": 16,
+              "typeface": "Aptos",
+              "color": "#FFFFFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kb6xkf6d",
+      "id": "17",
+      "bbox": [
+        388,
+        370,
+        170,
+        16
+      ],
+      "geometry": "rect",
+      "text": "1. Audio-only mode",
+      "textPreview": "1. Audio-only mode",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "1. Audio-only mode"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "1. Audio-only mode",
+          "runs": [
+            {
+              "index": 1,
+              "text": "1. Audio-only mode",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#30D5C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/r2p8nqxs",
+      "id": "18",
+      "bbox": [
+        388,
+        392,
+        292,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Skip the visual UI entirely for headphone-first use.",
+      "textPreview": "Skip the visual UI entirely for headphone-first use.",
+      "resolvedFontSize": 10.51,
+      "resolvedTextStyle": {
+        "fontSize": 10.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Skip the visual UI entirely for headphone-first use."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Skip the visual UI entirely for headphone-first use.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Skip the visual UI entirely for headphone-first use.",
+              "fontSize": 10.51,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2hwfyxob",
+      "id": "19",
+      "bbox": [
+        388,
+        432,
+        170,
+        16
+      ],
+      "geometry": "rect",
+      "text": "2. Firestore history",
+      "textPreview": "2. Firestore history",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "2. Firestore history"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "2. Firestore history",
+          "runs": [
+            {
+              "index": 1,
+              "text": "2. Firestore history",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#30D5C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 20,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/q1orytsv",
+      "id": "20",
+      "bbox": [
+        388,
+        454,
+        292,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Keep recent scene descriptions with timestamps for recall.",
+      "textPreview": "Keep recent scene descriptions with timestamps for recall.",
+      "resolvedFontSize": 10.51,
+      "resolvedTextStyle": {
+        "fontSize": 10.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Keep recent scene descriptions with timestamps for recall."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Keep recent scene descriptions with timestamps for recall.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Keep recent scene descriptions with timestamps for recall.",
+              "fontSize": 10.51,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 21,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fmlkjm1c",
+      "id": "21",
+      "bbox": [
+        388,
+        494,
+        170,
+        16
+      ],
+      "geometry": "rect",
+      "text": "3. Optional login",
+      "textPreview": "3. Optional login",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "3. Optional login"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "3. Optional login",
+          "runs": [
+            {
+              "index": 1,
+              "text": "3. Optional login",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#30D5C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 22,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/87ed8bat",
+      "id": "22",
+      "bbox": [
+        388,
+        516,
+        292,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Save history without blocking anonymous usage.",
+      "textPreview": "Save history without blocking anonymous usage.",
+      "resolvedFontSize": 10.51,
+      "resolvedTextStyle": {
+        "fontSize": 10.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Save history without blocking anonymous usage."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Save history without blocking anonymous usage.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Save history without blocking anonymous usage.",
+              "fontSize": 10.51,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 23,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xs72x4na",
+      "id": "23",
+      "bbox": [
+        388,
+        550,
+        190,
+        16
+      ],
+      "geometry": "rect",
+      "text": "4. Navigation assistance",
+      "textPreview": "4. Navigation assistance",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "4. Navigation assistance"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "4. Navigation assistance",
+          "runs": [
+            {
+              "index": 1,
+              "text": "4. Navigation assistance",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#30D5C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 24,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qtcj6tov",
+      "id": "24",
+      "bbox": [
+        388,
+        572,
+        292,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Expand obstacle detection and directional suggestions carefully.",
+      "textPreview": "Expand obstacle detection and directional suggestions carefully.",
+      "resolvedFontSize": 10.51,
+      "resolvedTextStyle": {
+        "fontSize": 10.51,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Expand obstacle detection and directional suggestions"
+          },
+          {
+            "index": 2,
+            "text": "carefully."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Expand obstacle detection and directional suggestions carefully.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Expand obstacle detection and directional suggestions carefully.",
+              "fontSize": 10.51,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 25,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/je9cvixc",
+      "id": "25",
+      "bbox": [
+        760,
+        300,
+        424,
+        294
+      ],
+      "geometry": "rect",
+      "fillColor": "#0D1D31",
+      "lineColor": "#294562",
+      "lineWidth": 1
+    },
+    {
+      "order": 26,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8z25kb6x",
+      "id": "26",
+      "bbox": [
+        786,
+        326,
+        180,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Good presenter framing",
+      "textPreview": "Good presenter framing",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Good presenter"
+          },
+          {
+            "index": 2,
+            "text": "framing"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Good presenter framing",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Good presenter framing",
+              "fontSize": 16,
+              "typeface": "Aptos",
+              "color": "#FFFFFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 27,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1gvy90je",
+      "id": "27",
+      "bbox": [
+        786,
+        366,
+        356,
+        86
+      ],
+      "geometry": "rect",
+      "text": "If you are presenting this project, the strongest line is simple: SightSync is meant to give blind and low-vision users immediate spoken context from the world in front of them, with as little interface friction as possible.",
+      "textPreview": "If you are presenting this project, the strongest line is simple: SightSync is meant to give blind and low-vision users immediate spoken ...",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 4,
+        "lines": [
+          {
+            "index": 1,
+            "text": "If you are presenting this project, the strongest line is simple:"
+          },
+          {
+            "index": 2,
+            "text": "SightSync is meant to give blind and low-vision users"
+          },
+          {
+            "index": 3,
+            "text": "immediate spoken context from the world in front of them,"
+          },
+          {
+            "index": 4,
+            "text": "with as little interface friction as possible."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "If you are presenting this project, the strongest line is simple: SightSync is meant to give blind and low-vision users immediate spoken context from the world in front of them, with as little interface friction as possible.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "If you are presenting this project, the strongest line is simple: SightSync is meant to give blind and low-vision users immediate spoken context from the world in front of them, with as little interface friction as possible.",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#9FB3C8"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 28,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qpg3ex0n",
+      "id": "28",
+      "bbox": [
+        786,
+        484,
+        356,
+        70
+      ],
+      "geometry": "rect",
+      "text": "That framing keeps the deck honest. It positions the app as assistive and practical, not fully autonomous, while still making the technical work feel ambitious and real.",
+      "textPreview": "That framing keeps the deck honest. It positions the app as assistive and practical, not fully autonomous, while still making the technic...",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "That framing keeps the deck honest. It positions the app as"
+          },
+          {
+            "index": 2,
+            "text": "assistive and practical, not fully autonomous, while still"
+          },
+          {
+            "index": 3,
+            "text": "making the technical work feel ambitious and real."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "That framing keeps the deck honest. It positions the app as assistive and practical, not fully autonomous, while still making the technical work feel ambitious and real.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "That framing keeps the deck honest. It positions the app as assistive and practical, not fully autonomous, while still making the technical work feel ambitious and real.",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#C1CFDD"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 29,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fa9w3m94",
+      "id": "29",
+      "bbox": [
+        64,
+        684,
+        1152,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#294562",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 30,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/58z25kb6",
+      "id": "30",
+      "bbox": [
+        64,
+        691,
+        980,
+        14
+      ],
+      "geometry": "rect",
+      "text": "Source: README.md suggested next MVP milestone section and current frontend/backend implementation",
+      "textPreview": "Source: README.md suggested next MVP milestone section and current frontend/backend implementation",
+      "resolvedFontSize": 8,
+      "resolvedTextStyle": {
+        "fontSize": 8,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Source: README.md suggested next MVP milestone section and current frontend/backend implementation"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Source: README.md suggested next MVP milestone section and current frontend/backend implementation",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Source: README.md suggested next MVP milestone section and current frontend/backend implementation",
+              "fontSize": 8,
+              "typeface": "Aptos",
+              "color": "#7E96B0"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 31,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gn29gr2p",
+      "id": "31",
+      "bbox": [
+        1168,
+        687,
+        48,
+        18
+      ],
+      "geometry": "rect",
+      "text": "06",
+      "textPreview": "06",
+      "resolvedFontSize": 11,
+      "resolvedTextStyle": {
+        "fontSize": 11,
+        "typeface": "Aptos Display",
+        "bold": true,
+        "alignment": "right"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "06"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "06",
+          "runs": [
+            {
+              "index": 1,
+              "text": "06",
+              "fontSize": 11,
+              "typeface": "Aptos Display",
+              "color": "#9FB3C8",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

@@ -7,11 +7,15 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Initialize the CambAI client
-try:
-    client = AsyncCambAI(api_key=settings.CAMBAI_API_KEY)
-except Exception as e:
-    logger.error(f"Failed to initialize Camb AI client: {e}")
+# Initialize the CambAI client only when configured. Missing Camb should not
+# block scene analysis or browser speech fallback in the client.
+if settings.CAMBAI_API_KEY:
+    try:
+        client = AsyncCambAI(api_key=settings.CAMBAI_API_KEY)
+    except Exception as e:
+        logger.error(f"Failed to initialize Camb AI client: {e}")
+        client = None
+else:
     client = None
 
 async def generate_speech_base64(text: str, voice_id: int = 147320) -> Optional[str]:

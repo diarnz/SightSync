@@ -5,7 +5,10 @@ import {
   Zap, Clock, Tag, Mic, MicOff, CheckCircle2, SwitchCamera,
 } from 'lucide-react';
 import { useVoiceControl } from '../hooks/useVoiceControl';
+import { useTTS } from '../hooks/useTTS';
 import ChatPanel from '../components/ChatPanel';
+import { analyzeImage } from '../services/api';
+import type { AnalysisResponse } from '../types';
 
 // How often to CHECK for changes during live mode (ms).
 const LIVE_INTERVAL_MS = 1000;
@@ -16,14 +19,7 @@ const DIFF_H = 45;
 const CHANGE_THRESHOLD = 0.08;
 const LUMA_TOLERANCE = 15;
 
-interface AnalysisResult {
-  description: string;
-  tags: string[];
-  confidence: string;
-  processing_time_ms: number;
-  audio_base64: string | null;
-  timestamp: Date;
-}
+type AnalysisResult = Omit<AnalysisResponse, 'timestamp'> & { timestamp: Date };
 
 type ChangeStatus = 'idle' | 'watching' | 'changed' | 'no-change';
 
@@ -43,9 +39,13 @@ const SceneAssistantPage: React.FC = () => {
 
   const webcamRef = useRef<Webcam>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const isPendingRef = useRef(false);
   const lastFrameDataRef = useRef<Uint8ClampedArray | null>(null);
+  const { speak, stop: stopSpeech } = useTTS();
+
+  const getErrorMessage = (error: unknown) => {
+    return error instanceof Error ? error.message : 'An unknown error occurred';
+  };
 
   // Ref to the ChatPanel's sendQuestion function (populated via callback)
   const chatSendRef = useRef<((q: string) => void) | null>(null);
@@ -114,36 +114,29 @@ const SceneAssistantPage: React.FC = () => {
     try {
       const res = await fetch(imageSrc);
       const blob = await res.blob();
-      const formData = new FormData();
-      formData.append('file', blob, 'capture.jpg');
-
-      const response = await fetch('/api/analyze-image', { method: 'POST', body: formData });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Server error: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await analyzeImage(blob);
       setResult({
         description: data.description,
         tags: data.tags ?? [],
         confidence: data.confidence ?? 'medium',
+        urgency: data.urgency ?? 'normal',
+        should_speak: data.should_speak ?? false,
         processing_time_ms: data.processing_time_ms ?? 0,
         audio_base64: data.audio_base64 ?? null,
         timestamp: new Date(),
       });
       setFrameCount(c => c + 1);
-      // Removed automatic audio playback for scene captures as requested by the user.
-      // Audio can still be replayed manually via the replay button or voice command.
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      if (audioEnabled && data.should_speak) {
+        speak({ text: data.description, audioBase64: data.audio_base64 });
+      }
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       isPendingRef.current = false;
       setPendingAnalysis(false);
       setChangeStatus(prev => (prev === 'changed' ? 'watching' : prev));
     }
-  }, [audioEnabled, hasSceneChanged]);
+  }, [audioEnabled, hasSceneChanged, speak]);
 
   // ── Live mode ────────────────────────────────────────────────────────────
 
@@ -161,8 +154,8 @@ const SceneAssistantPage: React.FC = () => {
     setIsLive(false);
     setChangeStatus('idle');
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
-    if (audioRef.current) audioRef.current.pause();
-  }, []);
+    stopSpeech();
+  }, [stopSpeech]);
 
   // ── Single capture ───────────────────────────────────────────────────────
 
@@ -182,16 +175,11 @@ const SceneAssistantPage: React.FC = () => {
 
   useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
 
-  const playAudio = (base64Data: string) => {
-    try {
-      if (audioRef.current) audioRef.current.pause();
-      const audio = new Audio(`data:audio/wav;base64,${base64Data}`);
-      audioRef.current = audio;
-      audio.play().catch(console.error);
-    } catch (e) { console.error('Failed to play audio:', e); }
+  const replayAudio = () => {
+    if (result) {
+      speak({ text: result.description, audioBase64: result.audio_base64 });
+    }
   };
-
-  const replayAudio = () => { if (result?.audio_base64) playAudio(result.audio_base64); };
 
   // ── Voice control ────────────────────────────────────────────────────────
 
@@ -259,6 +247,9 @@ const SceneAssistantPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col p-4 sm:p-8 max-w-4xl mx-auto z-10">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {error ? `Error: ${error}` : result?.description ?? currentStatus?.text ?? ''}
+      </div>
 
       {/* Header */}
       <header className="mb-6 text-center slide-up">
@@ -415,31 +406,9 @@ const SceneAssistantPage: React.FC = () => {
         </section>
 
         {/* Voice commands cheatsheet */}
-        {isListening && (
-          <div className="card-glass p-4 border-green-500/20 bg-green-500/5 fade-in">
-            <p className="text-xs text-green-400 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Mic className="w-3.5 h-3.5" /> Voice commands &amp; questions
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                '"analyze"', '"describe"', '"scan"', '"tell me"',
-                '"what do you see"', '"start live"', '"stop live"', '"replay"',
-                '"switch camera"', '"is there a person?"', '"what colour is…"', '"how many…"',
-              ].map(phrase => (
-                <span key={phrase} className="px-2.5 py-1 rounded-full text-xs bg-green-500/10 text-green-300 border border-green-500/20">
-                  {phrase}
-                </span>
-              ))}
-            </div>
-            <p className="text-xs text-green-300/60 mt-2">
-              💡 Any question not matching a command is sent to the chat below.
-            </p>
-          </div>
-        )}
-
         {/* Live status row */}
         {isLive && (
-          <div className="text-center text-sm fade-in -mt-2 flex flex-wrap items-center justify-center gap-2">
+          <div className="text-center text-sm fade-in -mt-2 flex flex-wrap items-center justify-center gap-2" role="status" aria-live="polite">
             <span className="text-gray-500">
               Checks every {LIVE_INTERVAL_MS / 1000}s · {frameCount} API call{frameCount !== 1 ? 's' : ''} sent
             </span>
@@ -454,7 +423,7 @@ const SceneAssistantPage: React.FC = () => {
 
         {/* Error */}
         {error && (
-          <div className="card-glass p-5 border-red-500/30 bg-red-500/10 fade-in flex items-start gap-4">
+          <div className="card-glass p-5 border-red-500/30 bg-red-500/10 fade-in flex items-start gap-4" role="alert">
             <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
             <div>
               <h3 className="text-base font-bold text-red-400 mb-0.5">Error</h3>
@@ -465,21 +434,26 @@ const SceneAssistantPage: React.FC = () => {
 
         {/* Result card */}
         {result && (
-          <div className="card-glass p-6 sm:p-8 fade-in relative group overflow-hidden" key={result.timestamp.toISOString()}>
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-cyan-400" />
+          <div className="card-glass p-6 sm:p-8 fade-in relative group overflow-hidden" key={result.timestamp.toISOString()} aria-live="polite" aria-atomic="true">
+            <div className={`absolute top-0 left-0 w-1 h-full ${result.urgency === 'critical' ? 'bg-gradient-to-b from-red-500 to-amber-400' : 'bg-gradient-to-b from-blue-500 to-cyan-400'}`} />
 
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold flex items-center gap-2">
-                <Volume2 className="w-5 h-5 text-blue-400" />
+                <Volume2 className={`w-5 h-5 ${result.urgency === 'critical' ? 'text-red-400' : 'text-blue-400'}`} />
                 Scene Description
                 <span className={`text-sm font-medium ml-1 ${confidenceColor[result.confidence] ?? 'text-gray-400'}`}>
                   ({result.confidence})
                 </span>
+                {result.urgency === 'critical' && (
+                  <span className="text-xs font-bold uppercase tracking-wide text-red-300 bg-red-500/10 border border-red-500/30 rounded px-2 py-0.5">
+                    Critical
+                  </span>
+                )}
               </h2>
               <button
                 id="btn-replay-audio"
                 onClick={replayAudio}
-                disabled={!result.audio_base64}
+                disabled={!result.description}
                 className="p-2 rounded-full hover:bg-white/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Replay audio description"
                 title="Replay audio"

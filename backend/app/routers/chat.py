@@ -24,7 +24,7 @@ MAX_BYTES = settings.MAX_IMAGE_SIZE_MB * 1024 * 1024
     summary="Ask a question about the current scene",
     description=(
         "Accepts a question (form field) and an image (multipart upload). "
-        "Sends both to Gemini and returns a spoken-word-friendly answer."
+        "Sends both to the model provider and returns a spoken-word-friendly answer."
     ),
 )
 async def chat_about_scene(
@@ -76,7 +76,7 @@ async def chat_about_scene(
         question, len(images), total_size,
     )
 
-    # ------ Gemini Q&A ------
+    # ------ Scene Q&A ------
     try:
         answer, processing_ms = await chat_with_images(
             question=question,

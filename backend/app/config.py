@@ -12,7 +12,15 @@ load_dotenv()
 
 
 class Settings:
-    # Google AI
+    # OpenRouter / model provider
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "google/gemma-3-12b-it")
+    OPENROUTER_FALLBACK_MODELS: str = os.getenv(
+        "OPENROUTER_FALLBACK_MODELS",
+        "google/gemma-3-27b-it",
+    )
+
+    # Legacy Google AI settings; retained only for older local env files.
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     GEMINI_MODEL:   str = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
 

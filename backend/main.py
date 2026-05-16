@@ -16,7 +16,7 @@ from app.config import settings
 # ------------------------------------------------------------------
 app = FastAPI(
     title="SightSync API",
-    description="Accessibility-focused multimodal AI backend powered by Google Gemini.",
+    description="Accessibility-focused multimodal AI backend powered by OpenRouter and Gemma.",
     version="1.0.0",
     docs_url="/docs",       # Swagger UI – handy for hackathon demos
     redoc_url="/redoc",

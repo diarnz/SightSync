@@ -1,0 +1,21 @@
+task mode: create
+primary deck-profile: engineering-platform
+secondary profile gates: product-platform
+required proof objects:
+- product workflow visual
+- intended user/use-case framing
+- accessibility and safety logic
+- architecture map
+- roadmap / next MVP milestones
+source requirements:
+- repository README
+- frontend scene assistant page
+- backend image analysis router
+- backend chat router
+- backend multimodal service
+asset requirements:
+- existing SightSync hero graphic from frontend assets
+- authored diagrams and product mockups inside slides
+known missing inputs:
+- no real user photography or demo screenshots
+- no measured production usage metrics yet

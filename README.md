@@ -1,6 +1,6 @@
-# SightSync 👁️ – AI Scene Description Assistant
+# SightSync - AI Scene Description Assistant
 
-> **Real-time multimodal AI guidance for visually impaired users, powered by Google Gemini.**
+> **Real-time multimodal AI guidance for visually impaired users, powered by OpenRouter and Gemma.**
 
 ---
 
@@ -11,24 +11,17 @@ SightSync/
 ├── frontend/                  # React + TypeScript + Vite + TailwindCSS
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Header.tsx         # Fixed nav bar with auth controls
-│   │   │   ├── ImageCapture.tsx   # Drag-drop upload + webcam capture
-│   │   │   ├── AnalysisResult.tsx # Gemini response with TTS controls
-│   │   │   └── AnalyzeButton.tsx  # Context-aware CTA button
+│   │   │   └── ChatPanel.tsx      # Scene Q&A with spoken answers
 │   │   ├── hooks/
-│   │   │   ├── useAuth.ts         # Firebase auth state listener
-│   │   │   ├── useTTS.ts          # SpeechSynthesis wrapper
-│   │   │   └── useImageAnalysis.ts # Core workflow orchestration
+│   │   │   ├── useTTS.ts          # Camb audio + browser SpeechSynthesis fallback
+│   │   │   └── useVoiceControl.ts # Browser speech-recognition commands
 │   │   ├── pages/
-│   │   │   ├── LoginPage.tsx      # Unauthenticated landing page
-│   │   │   └── SceneAssistantPage.tsx  # Main feature page
+│   │   │   └── SceneAssistantPage.tsx  # Camera, live mode, scene result, voice controls
 │   │   ├── services/
-│   │   │   └── api.ts             # Axios client → FastAPI backend
-│   │   ├── config/
-│   │   │   └── firebase.ts        # Firebase app initialisation
+│   │   │   └── api.ts             # Fetch client to FastAPI backend
 │   │   ├── types/
 │   │   │   └── index.ts           # Shared TypeScript interfaces
-│   │   ├── App.tsx                # Root component with auth gating
+│   │   ├── App.tsx                # Root component
 │   │   ├── main.tsx               # Vite entry point
 │   │   └── index.css              # Design system (tokens, animations)
 │   ├── index.html
@@ -41,12 +34,12 @@ SightSync/
 │   ├── Dockerfile             # Cloud Run ready
 │   ├── .env.example
 │   └── app/
-│       ├── config.py          # Pydantic-settings (reads .env)
+│       ├── config.py          # Environment settings
 │       ├── models.py          # Pydantic response models
 │       ├── routers/
 │       │   └── image_analysis.py  # POST /analyze-image
 │       └── services/
-│           └── gemini_service.py  # Gemini Multimodal API calls
+│           └── gemini_service.py  # OpenRouter multimodal API calls
 │
 └── .gitignore
 ```
@@ -64,17 +57,16 @@ cd SightSync
 # Requirements:
 # Node >= 18, npm >= 9
 # Python >= 3.11
-# A Google Cloud project with Gemini API enabled
-# A Firebase project with Authentication (Google provider) enabled
+# A Google Cloud project
 ```
 
 ### 2. Frontend setup
 
 ```bash
 cd frontend
-cp .env.example .env.local      # fill in Firebase + API values
+cp .env.example .env.local      # optional; defaults to /api locally
 npm install
-npm run dev                      # → http://localhost:5173
+npm run dev                      # https://localhost:5173
 ```
 
 ### 3. Backend setup
@@ -89,70 +81,47 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 
-cp .env.example .env            # add your GEMINI_API_KEY
+cp .env.example .env            # add your OPENROUTER_API_KEY
 uvicorn main:app --reload --port 8000
 # Swagger UI: http://localhost:8000/docs
 ```
 
----
+## OpenRouter Setup
 
-## Firebase Setup
-
-1. Go to [Firebase Console](https://console.firebase.google.com/) → **Create project**
-2. Enable **Authentication** → Sign-in methods → **Google**
-3. Register your web app → copy the config object
-4. Paste values into `frontend/.env.local`
-
-```env
-VITE_FIREBASE_API_KEY=AIza...
-VITE_FIREBASE_AUTH_DOMAIN=yourproject.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=yourproject
-VITE_FIREBASE_STORAGE_BUCKET=yourproject.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123:web:abc
-```
-
----
-
-## Gemini API Setup
-
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey) → **Get API key**
+1. Go to [OpenRouter](https://openrouter.ai/settings/keys) and get an API key.
 2. Add to `backend/.env`:
 
 ```env
-GEMINI_API_KEY=your_key_here
+OPENROUTER_API_KEY=your_key_here
+OPENROUTER_MODEL=google/gemma-3-12b-it
+OPENROUTER_FALLBACK_MODELS=google/gemma-3-27b-it
+# Optional server-generated audio. If omitted, the frontend uses browser TTS.
+CAMBAI_API_KEY=your_camb_key_here
 ```
 
-The default model is `gemini-2.0-flash` (fast multimodal). Change via `GEMINI_MODEL` env var.
+The default model is `google/gemma-3-12b-it`, with `google/gemma-3-27b-it` as a fallback for temporary upstream rate limits. Change these via `OPENROUTER_MODEL` and `OPENROUTER_FALLBACK_MODELS`.
 
 ---
 
 ## Cloud Run Deployment
 
+The repo includes a deployment script that publishes two Cloud Run services:
+
+- `sightsync-api` - FastAPI backend
+- `sightsync-web` - React frontend served by nginx
+
 ```bash
-# 1. Authenticate
+# 1. Authenticate and choose your Google Cloud project
 gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
 
-# 2. Build & push container image
-cd backend
-gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/sightsync-api
-
-# 3. Deploy to Cloud Run
-gcloud run deploy sightsync-api \
-  --image gcr.io/YOUR_PROJECT_ID/sightsync-api \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars GEMINI_API_KEY=your_key \
-  --memory 512Mi \
-  --cpu 1
-
-# 4. Update frontend .env.local with the Cloud Run URL:
-# VITE_API_BASE_URL=https://sightsync-api-xxxx-uc.a.run.app
-
-# 5. Add your production domain to Firebase → Authorised domains
+# 2. Deploy. OPENROUTER_API_KEY is stored in Secret Manager.
+PROJECT_ID=your-gcp-project-id \
+REGION=us-central1 \
+OPENROUTER_API_KEY=your_openrouter_key \
+./scripts/deploy-cloud-run.sh
 ```
+
+Optional: set `CAMBAI_API_KEY=...` in the same command to enable server-generated WAV audio.
 
 ---
 
@@ -163,20 +132,23 @@ gcloud run deploy sightsync-api \
 | Field | Value |
 |-------|-------|
 | Content-Type | `multipart/form-data` |
-| Body param | `file` – image file (JPEG, PNG, WebP, GIF, max 10 MB) |
+| Body param | `file` - image file (JPEG, PNG, WebP, GIF, max 10 MB) |
 
 **Response 200:**
 ```json
 {
   "description": "A busy street corner with two people waiting at a pedestrian crossing...",
   "confidence": "high",
+  "urgency": "normal",
+  "should_speak": false,
   "tags": ["street", "person", "pedestrian", "traffic light", "urban"],
   "timestamp": "2026-05-14T20:00:00.000Z",
-  "processing_time_ms": 1243
+  "processing_time_ms": 1243,
+  "audio_base64": null
 }
 ```
 
-**Error codes:** `400` empty file · `413` too large · `415` unsupported type · `502` Gemini error
+**Error codes:** `400` empty file · `413` too large · `415` unsupported type · `502` model provider error
 
 ---
 
@@ -185,7 +157,9 @@ gcloud run deploy sightsync-api \
 - All interactive elements have descriptive `aria-label` attributes
 - Keyboard navigable (Tab + Enter for all actions)
 - Large touch targets (min 52px height for all buttons)
-- Auto-reads descriptions aloud via `SpeechSynthesis` API
+- Auto-reads only critical scene descriptions aloud, such as hazards and navigation risks
+- Reads chat answers aloud when audio is enabled
+- Falls back to browser `SpeechSynthesis` when Camb AI audio is unavailable
 - High contrast dark theme with 18px base font size
 - Loading states announced via `aria-live` / `role="status"`
 - `role="alert"` on error messages for immediate screen reader announcement
@@ -194,8 +168,8 @@ gcloud run deploy sightsync-api \
 
 ## Suggested Next MVP Milestone
 
-1. **Firestore history** – persist the last N descriptions per user with timestamps
-2. **Continuous mode** – stream webcam frames every N seconds automatically
-3. **Audio-only mode** – skip visual UI entirely, designed for headphone use
-4. **Navigation assistance** – detect obstacles and suggest directions
-5. **Multi-language TTS** – detect scene language and match voice accordingly
+1. **Audio-only mode** - skip visual UI entirely, designed for headphone use
+2. **Firestore history** - persist the last N descriptions per user with timestamps
+3. **Optional login** - allow saved history without blocking anonymous use
+4. **Navigation assistance** - detect obstacles and suggest directions
+5. **Multi-language TTS** - detect scene language and match voice accordingly
